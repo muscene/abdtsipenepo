@@ -1,0 +1,48 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <title>Total Amount Chart</title>
+    <!-- Load Google Charts API -->
+    <script type="text/javascript" src="https://www.gstatic.com/charts/loader.js"></script>
+</head>
+
+<body>
+    <div id="totalAmountChart"></div>
+
+    <script>
+        // JavaScript using AJAX to fetch the total amount from the API
+        var xhr = new XMLHttpRequest();
+        xhr.open('GET', 'backend/get_total_amount.php', true);
+        xhr.onload = function() {
+            if (xhr.status === 200) {
+                var response = JSON.parse(xhr.responseText);
+                var totalAmount = parseFloat(response.total_amount);
+                console.log('Total Amount:', totalAmount);
+
+                // Load Google Charts API and draw the chart
+                google.charts.load('current', {
+                    'packages': ['corechart']
+                });
+                google.charts.setOnLoadCallback(drawChart);
+
+                function drawChart() {
+                    var data = google.visualization.arrayToDataTable([
+                        ['Total Amount', 'Amount'],
+                        ['Total Amount', totalAmount]
+                    ]);
+
+                    var options = {
+                        title: 'Total Amount Chart'
+                    };
+
+                    var chart = new google.visualization.LineChart(document.getElementById('totalAmountChart'));
+                    chart.draw(data, options);
+                }
+            }
+        };
+        xhr.send();
+    </script>
+</body>
+
+</html>
